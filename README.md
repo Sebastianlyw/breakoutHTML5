@@ -22,7 +22,7 @@ Breakout Game:
 
 
 To Do:
-I starting from Monday Morning and takes a lot time to familar with phaser API. So there is still many areas in this game can be polished. 
+I started  testing from Monday Morning and takes a lot time to familar with phaser API. So there is still many areas in this game can be polished. 
 Things I want to try in few days:
 1. make game installed as app
 2. Fixed portrait view size scale issue.
@@ -30,7 +30,4 @@ Things I want to try in few days:
 4. Completed menu scene, like adding Setting page into menu.
 
 
-Enjoy reviewing! I value all feedback and comments from you. 
-
-
-
+Enjoy reviewing! I value all feedback and comments from you.
