@@ -1,0 +1,15 @@
+﻿body {
+    font-family: 'Segoe UI', sans-serif;
+}
+
+span {
+    font-style: italic;
+}
+html, body, #game {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
