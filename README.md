@@ -17,7 +17,7 @@ Breakout Game:
 2. In game, only control input is mouse click. Paddle will follow mouse.
 3. Simple score system, paddle will expand when achieving certain scores. 
 4. If life is equal to zero, game go to game over scene. There is some simple particle effect and background music as well.
-5. IE11  in my machine does not support audio play. 
+5. IE11  in my machine does not support audio play. I tested mp3 , wav and ogg formats. 
 6. Tested int mobile device emulator, game scales to fit the screen size.
 
 
