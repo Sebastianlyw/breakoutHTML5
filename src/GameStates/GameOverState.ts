@@ -10,17 +10,13 @@
             super();
         }
 
-        preload() {
-            this.game.load.spritesheet('rain', '/asset/Graphics/rain.png', 16, 16);
-            this.game.load.audio("endGameMusic", "/asset/Audio/endGame.wav");
-        }
-
+      
         create() {
             this.gameOverBackGround = this.add.sprite(this.game.world.centerX, this.game.world.centerY, 'galaxy1');
             this.gameOverBackGround.anchor.setTo(0.5, 0.5);
             this.gameOverBackGround.scale.setTo(this.game.width / this.gameOverBackGround.width, this.game.height / this.gameOverBackGround.height);
 
-            this.gameOverText = this.game.add.text(this.game.world.centerX, this.game.world.centerY, 'Game Over ! \n\n - click to restart - ', { font: "40px Arial", fill: "#ffffff", align: "center" });
+            this.gameOverText = this.game.add.text(this.game.world.centerX, this.game.world.centerY, 'Game Over ! \n\n - click to restart - ', { font: "40px Arial", fill: "#ceefff", align: "center" });
 
             this.gameOverText.anchor.setTo(0.5, 0.5);
             this.input.onTap.addOnce(this.gameOverClicked, this);

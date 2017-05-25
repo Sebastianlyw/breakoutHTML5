@@ -6,7 +6,7 @@
     const xSpeed = 10;
     const hitBrickScore = 100;
     const rewardScore = 800;
-    const maxScale = 5;
+    const maxScale = 3.5;
     export const defaultScale = 1.3;
 
 
@@ -16,7 +16,8 @@
         brickGroups: Phaser.Group;
         brick: GameTestSebLi.Brick;
         paddle: GameTestSebLi.Paddle;
-        ball: GameTestSebLi.Ball;
+        ballGroups: Array<GameTestSebLi.Ball>;
+        ballNum : number;
         bgm: Phaser.Sound;
         hitSound: Phaser.Sound;
         livesText: Phaser.Text;
@@ -44,6 +45,7 @@
         }
 
         loadStaticImages() {
+         
             //!load backgroupnd image.
             this.gameBackGround = this.add.sprite(this.game.world.centerX, this.game.world.centerY, 'galaxy2');
             this.gameBackGround.anchor.setTo(0.5, 0.5);
@@ -86,21 +88,35 @@
 
 
             //! load ball and set it on the paddle at starting stage.
-            this.ball = new Ball(this.game, this.paddle.x + ballInitPading, this.paddle.y - this.paddle.height);
-            this.ball.scale.setTo(sx, sx);
-            this.game.add.existing(this.ball);
-            this.ball.events.onOutOfBounds.add(this.ballOutOfBounds, this);
+            this.ballNum = 0;
+            this.ballGroups = [ ];
+            this.ballGroups.push(this.newBallGeneration(sx,sy));
+
 
             this.livesText = this.game.add.text(window.innerWidth - 100, 25, 'lives: ' + this.lives, { font: "20px Arial", fill: "#ffffff", align: "left" });
             this.scoreText = this.game.add.text(25, window.innerHeight * 0.92, 'score: 0', { font: "20px Arial", fill: "#ffffff", align: "left" });
 
 
         }
+
+        newBallGeneration(sx:number, sy:number):GameTestSebLi.Ball{
+            ++this.ballNum;
+            var ball = new Ball(this.game, this.paddle.x + ballInitPading, this.paddle.y - this.paddle.height);
+            ball.scale.setTo(sx, sx);
+            this.game.add.existing(ball);
+            ball.events.onOutOfBounds.add(this.ballOutOfBounds, this);
+            return ball;
+        }
+
         cleanObjects() {
-            this.ball.kill();
+            for(var b of this.ballGroups){
+               b.kill();
+            }
+            this.ballGroups = [];
             this.paddle.kill();
             this.brickGroups.destroy(true);
         }
+
         update() {
 
             if (window.innerWidth < window.innerHeight && orientation != gameOrientation.portrait) {
@@ -117,12 +133,16 @@
             } 
 
             //! bounce logic 
-            if (this.ball.ballState == BallState.OnPaddle) {
-                this.ball.body.x = this.paddle.body.x + ballInitPading; 
-            }
-            else {
-                this.game.physics.arcade.collide(this.ball, this.paddle, this.ballCollidedWithPaddle, null, this);
-                this.game.physics.arcade.collide(this.ball, this.brickGroups, this.ballCollidedWithBrick, null, this);
+            for(var b of this.ballGroups){
+               
+                if (b.ballState == BallState.OnPaddle) {
+                    b.body.x = this.paddle.body.x + ballInitPading; 
+                }
+                else {
+                   
+                    this.game.physics.arcade.collide(b, this.paddle, this.ballCollidedWithPaddle, null, this);
+                    this.game.physics.arcade.collide(b, this.brickGroups, this.ballCollidedWithBrick, null, this); 
+                }
             }
 
 
@@ -136,6 +156,11 @@
 
             //! if ball hit the middle of paddle, try to avoid bouncing straight up.
             _ball.body.velocity.x = (diff != 0) ? xSpeed * diff * (Math.random() +0.5)  : Math.random() * xSpeed + 3;
+            //! in some case ball is almost at same level to paddle. to void boucing horizontally.
+            if(Math.abs(_ball.body.velocity.y) < 5 ) {
+                _ball.body.velocity.y -= 200; 
+            }
+
 
         }
 
@@ -150,38 +175,63 @@
             this.scoreText.text = "score: " + GamePlayState.score;
             //!Reset level if all bricks are destoried.
             if (this.brickGroups.countLiving() == 0) {
-            
-                this.ball.ballState = BallState.OnPaddle;
-                this.ball.body.velocity.set(0);
-                this.ball.x = this.paddle.x + ballInitPading;
-                this.ball.y = this.paddle.y - this.paddle.height;
+                _ball.ballState = BallState.OnPaddle;
+                _ball.reset(this.paddle.x + ballInitPading, this.paddle.y - this.paddle.height);
+                for(var b of this.ballGroups){
+                    if(_ball.index != b.index){
+                        b.emitter.on = false;
+                        b.kill();
+                    }
+                }
+
                 this.brickGroups.callAll('revive', null);
+                
             }
 
             //! give some reward if player meet certain score achivement
             if (GamePlayState.score % rewardScore == 0 && this.paddle.scale.x < maxScale) {
+                //! paddle extends
                 var cs = this.paddle.scale.x;
                 this.paddle.scale.setTo(cs * 1.2, this.paddle.scale.y);
+                //! Extra 3 balls generated.
+                var sx = this.ballGroups[0].scale.x;
+                var sy = this.ballGroups[0].scale.y;
+                this.ballGroups.push(this.newBallGeneration(sx,sy));
+               // this.ballGroups.push(this.newBallGeneration(sx,sy));
+                
             }
 
         }
 
-        ballOutOfBounds() {
-          
-
+        ballOutOfBounds(_ball) {
+            --this.ballNum;
+ 
+            if(this.ballNum == 0){
+                this.livesText.text = "lives: " + --this.lives;
+            }   
          
-
-            this.livesText.text = "lives: " + --this.lives;
+                     
             if (this.lives == 0)
             {
                 this.bgm.stop();
                 this.game.state.start("GameOverState");
+                this.ballGroups = [];
             }
             else
             {
-                this.ball.ballState = BallState.OnPaddle;
-                this.ball.reset(this.paddle.x + ballInitPading, this.paddle.y - this.paddle.height);
+                if(this.ballNum == 0)
+                {
+                    ++this.ballNum;
+                    _ball.ballState = BallState.OnPaddle;
+                    _ball.reset(this.paddle.x + ballInitPading, this.paddle.y - this.paddle.height);
+                    _ball.emitter.on = false;
+                }
+                else{
+                     _ball.emitter.on = false;
+                    _ball.kill();
+                }
             }
+            
 
         }
 

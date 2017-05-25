@@ -14,9 +14,15 @@
             this.game.load.image("logo", "/asset/Graphics/breakoutLogo.png");
             this.game.load.image("mute", "/asset/Graphics/mute.png");
             this.game.load.image("on", "/asset/Graphics/unmute.png");
+            this.game.load.image("flare1", "/asset/Graphics/flare_point.png");
+            this.game.load.image("flare2", "/asset/Graphics/flare_diamond.png");
+            this.game.load.image("flare3", "/asset/Graphics/flare_vertical.png");
             this.game.load.audio("inGameMusic", "/asset/Audio/badass.wav");
             this.game.load.audio("endGameMusic", "/asset/Audio/endGame.wav");
             this.game.load.audio("hitSound", "/asset/Audio/hitSoundEffect.wav");
+            this.game.load.script('filter', "/asset/Graphics/Fire.js");
+            this.game.load.spritesheet('rain', '/asset/Graphics/rain.png', 16, 16);
+            this.game.load.audio("endGameMusic", "/asset/Audio/endGame.wav");
         }
 
         create() {
