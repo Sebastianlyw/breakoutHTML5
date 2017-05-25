@@ -2,7 +2,6 @@
     const brickRows = 4;
     const brickColumns = 14;
     const rowPadding = 52;
-    const ballInitPading = 16;
     const xSpeed = 10;
     const hitBrickScore = 100;
     const rewardScore = 800;
@@ -101,7 +100,7 @@
 
         newBallGeneration(sx:number, sy:number):GameTestSebLi.Ball{
             ++this.ballNum;
-            var ball = new Ball(this.game, this.paddle.x + ballInitPading, this.paddle.y - this.paddle.height);
+            var ball = new Ball(this.game, this.paddle.x + this.paddle.width/2, this.paddle.y - this.paddle.height);
             ball.scale.setTo(sx, sx);
             this.game.add.existing(ball);
             ball.events.onOutOfBounds.add(this.ballOutOfBounds, this);
@@ -136,7 +135,7 @@
             for(var b of this.ballGroups){
                
                 if (b.ballState == BallState.OnPaddle) {
-                    b.body.x = this.paddle.body.x + ballInitPading; 
+                    b.body.x = this.paddle.body.x + this.paddle.width/2; 
                 }
                 else {
                    
@@ -176,7 +175,8 @@
             //!Reset level if all bricks are destoried.
             if (this.brickGroups.countLiving() == 0) {
                 _ball.ballState = BallState.OnPaddle;
-                _ball.reset(this.paddle.x + ballInitPading, this.paddle.y - this.paddle.height);
+                _ball.emitter.on = false;
+                _ball.reset(this.paddle.x + this.paddle.width/2, this.paddle.y - this.paddle.height);
                 for(var b of this.ballGroups){
                     if(_ball.index != b.index){
                         b.emitter.on = false;
@@ -189,10 +189,13 @@
             }
 
             //! give some reward if player meet certain score achivement
-            if (GamePlayState.score % rewardScore == 0 && this.paddle.scale.x < maxScale) {
+            if (GamePlayState.score % rewardScore == 0) {
                 //! paddle extends
-                var cs = this.paddle.scale.x;
-                this.paddle.scale.setTo(cs * 1.2, this.paddle.scale.y);
+                if( this.paddle.scale.x < maxScale){
+
+                    var cs = this.paddle.scale.x;
+                    this.paddle.scale.setTo(cs * 1.2, this.paddle.scale.y);
+                }
                 //! Extra 3 balls generated.
                 var sx = this.ballGroups[0].scale.x;
                 var sy = this.ballGroups[0].scale.y;
@@ -223,7 +226,7 @@
                 {
                     ++this.ballNum;
                     _ball.ballState = BallState.OnPaddle;
-                    _ball.reset(this.paddle.x + ballInitPading, this.paddle.y - this.paddle.height);
+                    _ball.reset(this.paddle.x + this.paddle.width/2, this.paddle.y - this.paddle.height);
                     _ball.emitter.on = false;
                 }
                 else{
