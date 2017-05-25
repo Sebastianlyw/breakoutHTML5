@@ -25,12 +25,11 @@
             this.gameOverText.anchor.setTo(0.5, 0.5);
             this.input.onTap.addOnce(this.gameOverClicked, this);
 
-            //particle effect
+            //!rain particle effect
             var emitter = this.game.add.emitter(this.game.world.centerX, 0, 500);
 
             emitter.width = this.game.world.width;
-            // emitter.angle = 30; // uncomment to set an angle for the rain.
-
+         
             emitter.makeParticles('rain');
             emitter.minRotation = 0;
             emitter.maxRotation = 0;
@@ -41,14 +40,14 @@
             emitter.start(false, 1550, 5, 0);
 
             this.gameOverMusic = this.game.add.sound("endGameMusic");
-            this.gameOverMusic.volume = 80;
+            this.gameOverMusic.volume = 40;
             this.gameOverMusic.loop = true;
             
             this.gameOverMusic.play();
         }
 
         gameOverClicked() {
-            this.game.state.start("GamePlayState");
+            this.game.state.start("MenuState");
             this.gameOverMusic.stop();
         }
     }

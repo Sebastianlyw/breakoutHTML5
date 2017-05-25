@@ -12,6 +12,8 @@
             this.game.load.image("galaxy1", "/asset/Graphics/galaxy1.jpg");
             this.game.load.image("galaxy2", "/asset/Graphics/galaxy2.jpg");
             this.game.load.image("logo", "/asset/Graphics/breakoutLogo.png");
+            this.game.load.image("mute", "/asset/Graphics/mute.png");
+            this.game.load.image("on", "/asset/Graphics/unmute.png");
             this.game.load.audio("inGameMusic", "/asset/Audio/badass.wav");
             this.game.load.audio("endGameMusic", "/asset/Audio/endGame.wav");
             this.game.load.audio("hitSound", "/asset/Audio/hitSoundEffect.wav");

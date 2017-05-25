@@ -108,14 +108,12 @@
                 this.cleanObjects();
                 this.loadStaticImages();
                 this.game.scale.setGameSize(window.innerWidth, window.innerHeight);
-                console.log("change to portrait");
             }
             else if (window.innerWidth > window.innerHeight && orientation != gameOrientation.lanscape) {
                 orientation = gameOrientation.lanscape;
                 this.cleanObjects();
                 this.loadStaticImages();
                 this.game.scale.setGameSize(window.innerWidth, window.innerHeight);
-                console.log("change to lanscape");
             } 
 
             //! bounce logic 
@@ -143,7 +141,7 @@
 
         ballCollidedWithBrick(_ball, _brick) {
             this.hitSound = this.game.add.audio("hitSound");
-            this.hitSound.volume = 80;
+            this.hitSound.volume = 40;
             
             this.hitSound.play();
 
@@ -170,6 +168,8 @@
 
         ballOutOfBounds() {
           
+
+         
 
             this.livesText.text = "lives: " + --this.lives;
             if (this.lives == 0)
